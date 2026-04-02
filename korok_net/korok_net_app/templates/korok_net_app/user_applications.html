@@ -1,0 +1,130 @@
+{% extends 'korok_net_app/base.html' %}
+
+{% block title %}Личный кабинет | KorokNet{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container cabinet-shell">
+        <div class="cabinet-overview">
+            <article class="panel cabinet-lead">
+                <span class="section-kicker">Личный кабинет</span>
+                <h1>Все ваши заявки собраны в одной рабочей ленте.</h1>
+                <p class="section-lead">Здесь можно посмотреть выбранные программы, дату старта, текущий статус обработки и отзывы по завершенным обращениям.</p>
+                <div class="hero-actions">
+                    <a class="button" href="{% url 'main' %}#application-form">Подать новую заявку</a>
+                    <a class="button button--ghost" href="{% url 'main' %}">Вернуться на главную</a>
+                </div>
+            </article>
+        </div>
+
+        {% if applications %}
+        <div class="cabinet-stream">
+            {% for app in applications %}
+            <article class="panel application-card application-card--light cabinet-card">
+                <div class="cabinet-card__hero">
+                    <div class="cabinet-card__title">
+                        <span class="status-pill status-pill--{{ app.status }}">{{ app.get_status_display }}</span>
+                        <h2>{{ app.get_title_display }}</h2>
+                        <p>Заявка от {{ app.created_at|date:"d.m.Y" }} на программу с началом {{ app.start_at|date:"d.m.Y" }}.</p>
+                    </div>
+                    <div class="cabinet-card__stamp">
+                        <span>Создано</span>
+                        <strong>{{ app.created_at|date:"d.m.Y H:i" }}</strong>
+                    </div>
+                </div>
+
+                <div class="cabinet-card__body">
+                    <div class="cabinet-meta-grid">
+                        <article class="cabinet-meta-box">
+                            <span>Программа</span>
+                            <strong>{{ app.get_title_display }}</strong>
+                        </article>
+                        <article class="cabinet-meta-box">
+                            <span>Дата старта</span>
+                            <strong>{{ app.start_at|date:"d.m.Y" }}</strong>
+                        </article>
+                        <article class="cabinet-meta-box">
+                            <span>Оплата</span>
+                            <strong>{{ app.get_payment_method_display }}</strong>
+                        </article>
+                        <article class="cabinet-meta-box">
+                            <span>Отзыв</span>
+                            <strong>{% if app.reviews %}{{ app.reviews.get_mark_display }}{% else %}Пока нет{% endif %}</strong>
+                        </article>
+                    </div>
+
+                    {% if app.reviews %}
+                    <div class="review-preview cabinet-review">
+                        <strong>Ваш отзыв</strong>
+                        <p>{{ app.reviews.text }}</p>
+                    </div>
+                    {% elif app.status == 'finished' %}
+                    <details class="review-details cabinet-review" {% if review_target == app.id %}open{% endif %}>
+                        <summary>Оставить отзыв по завершенной программе</summary>
+                        <form method="post" class="form-card form-card--inline form-card--light">
+                            {% csrf_token %}
+                            <input type="hidden" name="application_id" value="{{ app.id }}">
+
+                            {% with current_form=review_form %}
+                            <div class="field">
+                                <label for="id_mark_{{ app.id }}">Оценка</label>
+                                <select name="mark" id="id_mark_{{ app.id }}" class="input">
+                                    {% for value, label in current_form.fields.mark.choices %}
+                                    <option value="{{ value }}" {% if current_form.data.mark == value|stringformat:'s' and review_target == app.id %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% if review_target == app.id %}
+                                    {% for error in current_form.mark.errors %}
+                                    <div class="field-error">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+
+                            <div class="field">
+                                <label for="id_text_{{ app.id }}">Отзыв</label>
+                                <textarea name="text" id="id_text_{{ app.id }}" rows="4" class="input">{% if review_target == app.id %}{{ current_form.data.text }}{% endif %}</textarea>
+                                {% if review_target == app.id %}
+                                    {% for error in current_form.text.errors %}
+                                    <div class="field-error">{{ error }}</div>
+                                    {% endfor %}
+                                    {% for error in current_form.non_field_errors %}
+                                    <div class="field-error">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            {% endwith %}
+
+                            <button class="button" type="submit">Сохранить отзыв</button>
+                        </form>
+                    </details>
+                    {% else %}
+                    <div class="review-locked cabinet-review">
+                        Оставить отзыв можно после того, как обучение по этой заявке будет завершено.
+                    </div>
+                    {% endif %}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Назад</a>
+            {% endif %}
+            <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Далее</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% else %}
+        <article class="panel panel--light empty-state cabinet-empty">
+            <h2>Заявок пока нет</h2>
+            <p>Вы еще не отправляли обращения на обучение. Начать можно с формы на главной странице.</p>
+            <a class="button" href="{% url 'main' %}#application-form">Перейти к заявке</a>
+        </article>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

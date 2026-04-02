@@ -1,0 +1,306 @@
+{% extends 'korok_net_app/base.html' %}
+{% load static %}
+
+{% block title %}Главная | KorokNet{% endblock %}
+{% block meta_description %}Выберите учебное направление, отправьте заявку и контролируйте весь путь обучения в выразительном цифровом интерфейсе KorokNet.{% endblock %}
+{% block meta_keywords %}обучение, заявка, цифровая платформа, личный кабинет, программы обучения, образовательный сервис{% endblock %}
+{% block social_meta %}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="KorokNet — цифровая витрина программ обучения">
+    <meta property="og:description" content="Современная подача заявок, личный кабинет и управление статусами в одном пространстве.">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'korok_net_app/images/image15.jpg' %}">
+    <meta property="og:locale" content="ru_RU">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="KorokNet — цифровая витрина программ обучения">
+    <meta name="twitter:description" content="Подача заявок, статусы и обратная связь в цельном темно-синем интерфейсе.">
+    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'korok_net_app/images/image15.jpg' %}">
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-layout">
+        <article class="hero-copy">
+            <span class="eyebrow">Платформа для подачи заявок на обучение</span>
+            <h1>Выберите программу, отправьте заявку и отслеживайте ее статус в одном личном кабинете.</h1>
+            <p class="hero-text">
+                KorokNet помогает быстро записаться на программу дополнительного обучения без лишних шагов. Пользователь видит доступные направления, выбирает дату старта, отправляет заявку и в любой момент может проверить, на каком этапе находится обращение.
+            </p>
+
+            <div class="hero-actions">
+                {% if request.user.is_authenticated and not request.user.is_staff %}
+                <a class="button" href="#application-form">Подать заявку</a>
+                <a class="button button--ghost" href="{% url 'user_applications' %}">Открыть кабинет</a>
+                {% elif request.user.is_staff %}
+                <a class="button" href="{% url 'admin_panel' %}">Перейти в панель</a>
+                {% else %}
+                <a class="button" href="{% url 'registration' %}">Создать профиль</a>
+                <a class="button button--ghost" href="{% url 'authorization' %}">У меня уже есть аккаунт</a>
+                {% endif %}
+            </div>
+
+            <div class="hero-strip">
+                <article class="metric-card">
+                    <span>Направлений</span>
+                    <strong>{{ hero_stats.courses }}</strong>
+                </article>
+                <article class="metric-card">
+                    <span>Заявок в системе</span>
+                    <strong>{{ hero_stats.applications }}</strong>
+                </article>
+                <article class="metric-card">
+                    <span>Завершено</span>
+                    <strong>{{ hero_stats.completed }}</strong>
+                </article>
+            </div>
+        </article>
+
+        <aside class="hero-showcase">
+            <div class="showcase-mosaic">
+                <img src="{% static 'korok_net_app/images/image15.jpg' %}" alt="Рабочее пространство с ноутбуком">
+                <div class="mosaic-stack">
+                    <img src="{% static 'korok_net_app/images/image07.jpg' %}" alt="Командная работа над цифровым проектом">
+                    <img src="{% static 'korok_net_app/images/image16.jpg' %}" alt="Планирование современного интерфейса">
+                </div>
+            </div>
+            <div class="feature-lead">
+                <span class="section-kicker">О сервисе</span>
+                <h2>Понятная структура для тех, кто хочет подать заявку без долгого поиска нужного раздела.</h2>
+                <p>Главная страница показывает ключевые действия сразу: знакомство с направлениями, оформление заявки, просмотр статусов и доступ к кабинету.</p>
+            </div>
+        </aside>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-split">
+            <div>
+                <span class="section-kicker">Как это работает</span>
+                <h2>Сервис выстраивает простой маршрут от выбора программы до получения обратной связи по завершенному обучению.</h2>
+            </div>
+            <p class="section-lead">Пользователь не заполняет длинные формы вслепую: каждая часть интерфейса объясняет, что делать дальше и где потом искать отправленную заявку.</p>
+        </div>
+
+        <div class="route-grid">
+            <article class="route-card">
+                <span>01</span>
+                <h3>Создайте профиль</h3>
+                <p>После регистрации система сохраняет ваши данные и открывает доступ к личному кабинету со всеми заявками.</p>
+            </article>
+            <article class="route-card">
+                <span>02</span>
+                <h3>Выберите направление</h3>
+                <p>На главной странице можно сразу определить программу, дату старта и удобный формат оплаты.</p>
+            </article>
+            <article class="route-card">
+                <span>03</span>
+                <h3>Отправьте заявку</h3>
+                <p>После отправки обращение сразу попадает в систему и становится доступным для отслеживания в кабинете.</p>
+            </article>
+            <article class="route-card">
+                <span>04</span>
+                <h3>Следите за результатом</h3>
+                <p>Когда обучение завершится, в кабинете можно оставить отзыв и оценить программу по итогам прохождения.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container story-grid">
+        <article class="story-card story-card--tall">
+            <span class="story-tag">Для пользователя</span>
+            <h3>Все важное собрано в одном месте: программа, дата старта, статус и история обращений.</h3>
+            <p>Сервис подходит тем, кто хочет быстро разобраться в структуре сайта и не тратить время на поиск нужной формы или раздела с заявками.</p>
+        </article>
+        <article class="story-card story-card--image">
+            <img src="{% static 'korok_net_app/images/image11.jpg' %}" alt="Современная визуальная работа над проектом">
+        </article>
+        <article class="story-card">
+            <span class="story-tag">О платформе</span>
+            <h3>Сайт помогает быстро перейти от знакомства с программами к заполнению заявки.</h3>
+            <p>Основные разделы выстроены последовательно: сначала пользователь знакомится с направлениями, затем выбирает подходящий вариант и оформляет обращение.</p>
+        </article>
+    </div>
+</section>
+
+<section class="section slider-stage">
+    <div class="container">
+        <div class="slider-layout slider-layout--single">
+            <div class="media-stage">
+                <div class="slider" data-slider>
+                    <div class="slider__track">
+                        <article class="slide active">
+                            <img src="{% static 'korok_net_app/images/image02.jpg' %}" alt="Современное рабочее пространство">
+                            <div class="slide__overlay">
+                                <strong>Платформа для записи на обучение</strong>
+                                <p>На сайте можно выбрать направление, отправить заявку и затем проверить ее статус в личном кабинете.</p>
+                            </div>
+                        </article>
+                        <article class="slide">
+                            <img src="{% static 'korok_net_app/images/image07.jpg' %}" alt="Командная работа над цифровым продуктом">
+                            <div class="slide__overlay">
+                                <strong>Подача заявки без лишних шагов</strong>
+                                <p>Пользователь последовательно переходит от выбора программы к оформлению заявки через короткую форму.</p>
+                            </div>
+                        </article>
+                        <article class="slide">
+                            <img src="{% static 'korok_net_app/images/image15.jpg' %}" alt="Ноутбук и эскизы интерфейса">
+                            <div class="slide__overlay">
+                                <strong>Личный кабинет пользователя</strong>
+                                <p>После входа доступны история обращений, текущие статусы заявок и возможность оставить отзыв по завершенному обучению.</p>
+                            </div>
+                        </article>
+                        <article class="slide">
+                            <img src="{% static 'korok_net_app/images/image16.jpg' %}" alt="Планирование креативного интерфейса">
+                            <div class="slide__overlay">
+                                <strong>Рабочая админ-панель</strong>
+                                <p>Сотрудники получают отдельную среду для обработки заявок, изменения статусов и просмотра отзывов.</p>
+                            </div>
+                        </article>
+                    </div>
+                    <button class="slider__control slider__control--prev" type="button" data-slider-prev aria-label="Предыдущий слайд">Назад</button>
+                    <button class="slider__control slider__control--next" type="button" data-slider-next aria-label="Следующий слайд">Далее</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container showcase-grid">
+        <article class="showcase-panel">
+            <span class="section-kicker">Программы</span>
+            <h2>Доступные направления обучения собраны в одном разделе, чтобы пользователь мог сравнить варианты без лишней навигации.</h2>
+            <div class="course-list">
+                <div class="course-card">
+                    <h3>Алгоритмизация и программирование</h3>
+                    <p>Подходит для тех, кто хочет развить алгоритмическое мышление, лучше понимать структуру программ и увереннее писать код.</p>
+                </div>
+                <div class="course-card">
+                    <h3>Веб-дизайн</h3>
+                    <p>Направление посвящено композиции, визуальной иерархии, проектированию интерфейсов и подаче цифрового контента.</p>
+                </div>
+                <div class="course-card">
+                    <h3>Проектирование баз данных</h3>
+                    <p>Курс помогает разобраться в моделировании данных, логике связей и создании устойчивой структуры информационной системы.</p>
+                </div>
+            </div>
+        </article>
+
+        <article class="manifest-panel">
+            <span class="section-kicker">Преимущества</span>
+            <h2>Сайт помогает быстрее ориентироваться и одинаково удобен и для новых пользователей, и для сотрудников.</h2>
+            <ul class="manifest-list">
+                <li>На главной странице сразу доступны основные действия и ключевая информация о сервисе.</li>
+                <li>Форма заявки читается легко и не теряется среди декоративных блоков.</li>
+                <li>Личный кабинет помогает отслеживать отправленные обращения и оставлять отзывы.</li>
+                <li>Административная часть поддерживает фильтрацию заявок и обновление статусов.</li>
+            </ul>
+        </article>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-split">
+            <div>
+                <span class="section-kicker">Отзывы пользователей</span>
+                <h2>Несколько оценок и комментариев от тех, кто уже завершил обучение.</h2>
+            </div>
+            <p class="section-lead">Отзывы публикуются после завершения программы и помогают понять впечатления участников от пройденного курса.</p>
+        </div>
+
+        {% if featured_reviews %}
+        <div class="reviews-grid landing-reviews-grid">
+            {% for review in featured_reviews %}
+            <article class="review-card landing-review-card">
+                <div class="review-card__meta">
+                    <div>
+                        <strong>{{ review.application.author }}</strong>
+                        <span>{{ review.application.get_title_display }}</span>
+                    </div>
+                    <span class="status-pill status-pill--finished">{{ review.get_mark_display }}</span>
+                </div>
+                <p>{{ review.text }}</p>
+                <span class="landing-review-date">{{ review.created_at|date:"d.m.Y" }}</span>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <article class="panel panel--light empty-state">
+            <h2>Отзывы пока не опубликованы</h2>
+            <p>После завершения первых программ здесь появятся комментарии пользователей.</p>
+        </article>
+        {% endif %}
+    </div>
+</section>
+
+<section class="section" id="application-form">
+    <div class="container application-layout">
+        <article class="application-intro">
+            <span class="section-kicker">Заявка на обучение</span>
+            <h2>Заполните короткую форму, чтобы подать заявку на выбранную программу.</h2>
+            <p>Для отправки достаточно выбрать направление, дату старта и формат оплаты. После этого заявка появится в личном кабинете, где можно будет следить за ее статусом.</p>
+
+            <div class="application-points">
+                <div>
+                    <strong>1</strong>
+                    <p>Укажите программу, которая вам подходит.</p>
+                </div>
+                <div>
+                    <strong>2</strong>
+                    <p>Выберите дату начала обучения и способ оплаты.</p>
+                </div>
+                <div>
+                    <strong>3</strong>
+                    <p>После отправки проверяйте обновления по заявке в личном кабинете.</p>
+                </div>
+            </div>
+        </article>
+
+        <article class="panel panel--light application-panel">
+            <div class="panel__header">
+                <span class="panel__label">Новая форма</span>
+                <h2>Оформить заявку</h2>
+            </div>
+
+            <form method="post" class="form-card form-card--light">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                    <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="form-grid form-grid--single">
+                    {% for field in form %}
+                    <div class="field">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <small>{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                        <div class="field-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if request.user.is_authenticated and not request.user.is_staff %}
+                <button type="submit" class="button button--wide">Отправить заявку</button>
+                {% elif request.user.is_staff %}
+                <div class="form-note">Для сотрудников прием и сопровождение заявок доступны в административной панели.</div>
+                <a class="button button--wide" href="{% url 'admin_panel' %}">Открыть панель управления</a>
+                {% else %}
+                <button type="submit" class="button button--wide">Войти, чтобы отправить заявку</button>
+                {% endif %}
+            </form>
+        </article>
+    </div>
+</section>
+{% endblock %}

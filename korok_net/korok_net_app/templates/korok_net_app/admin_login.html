@@ -1,0 +1,55 @@
+{% extends 'korok_net_app/base.html' %}
+
+{% block title %}Вход администратора | KorokNet{% endblock %}
+
+{% block content %}
+<section class="auth-layout">
+    <div class="container auth-grid">
+        <article class="auth-promo auth-promo--dark">
+            <span class="section-kicker">Служебный доступ</span>
+            <h1>Вход для сотрудников, которые контролируют поток заявок и сопровождают обучение.</h1>
+            <p>После авторизации открывается панель с фильтрами, управлением статусами и обзором отзывов по завершенным программам.</p>
+            <div class="promo-points promo-points--stack">
+                <div>
+                    <strong>Работа с заявками</strong>
+                    <p>Статусы можно обновлять прямо из таблицы без переключения между разделами.</p>
+                </div>
+                <div>
+                    <strong>Контроль обратной связи</strong>
+                    <p>Отзывы пользователей собраны в отдельном блоке административного интерфейса.</p>
+                </div>
+            </div>
+        </article>
+
+        <article class="panel panel--light auth-panel">
+            <div class="panel__header">
+                <span class="panel__label">Админ-доступ</span>
+                <h2>Введите служебные данные</h2>
+            </div>
+
+            <form method="post" class="form-card form-card--light" novalidate>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                    <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% for field in form %}
+                <div class="field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}
+                    <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="button button--wide">Открыть панель</button>
+            </form>
+        </article>
+    </div>
+</section>
+{% endblock %}
